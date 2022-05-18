@@ -1,6 +1,13 @@
 const inquirer = require('inquirer');
+const connection = require('./dbconnection.js')
 
-
+//start connection; if error it'll show the error; then it'll start everything
+connection.connect(function (err) {
+    if (err) {
+        throw err
+    }
+    init()
+})
 const questions = [
 {
     type: 'input',
