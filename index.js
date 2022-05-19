@@ -61,3 +61,70 @@ const viewAllDepartments = () => {
         init()
     })
 }
+
+const viewAllEmployees = () => {
+    connection.query('SELECT * FROM employees;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        console.table(res)
+        init()
+    })
+}
+
+//do rest of views here
+
+//add an employee
+const addAnEmployee = () => {
+    connection.query('SELECT * FROM roles;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        inquirer.prompt([{
+            type: 'input',
+            name: 'employeeFirstName',
+            message: "What is the employee's first name?"
+        },
+        {
+            type: 'input',
+            name: 'employeeLastName',
+            message: "What is the employee's last name?"
+        }, 
+        {
+            type: 'list',
+            name: 'roleTitle',
+            message: "What is the employee's role?",
+            //the word role below is arbitrary; we named it
+            //role is basically the response.
+            choices: res.map(role => role.job_title)
+        },
+        {
+            type: 'list',
+            name: 'managerId',
+            message: "What is the manager's ID number?",
+            choices: ['1']
+        }
+        ]).then((response) => {
+            const roleSelected = res.find(role => role.job_title === response.roleTitle)
+            //? is placeholder for set
+            connection.query('INSERT INTO employees SET ?', {
+                //declare column name and value we want to insert
+                first_name: response.employeeFirstName,
+                last_name: response.employeeLastName,
+                roles_id: roleSelected.id ,
+                manager_id: response.managerId
+
+            }, (err) => {
+                if (err) {
+                    throw err
+                }
+            console.log('new employee has been added')
+            init()
+            }) 
+        })
+    
+    })
+}
+
+//addrole is similar to addemployees, reference the department table
+//the update one - ask 2 questions, may need 2 separate queries. will need to query the emploeye's table, map thru employees to choose one, in .then query the roles table, and map thru job title roles, and then have another .then, and do update query and third .then
