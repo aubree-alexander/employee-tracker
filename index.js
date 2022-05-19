@@ -8,14 +8,15 @@ connection.connect(function (err) {
     }
     init()
 })
+
+
 const questions = [
 {
-    type: 'input',
-    name: 'view-options',
+    type: 'list',
+    name: 'view_options',
     message: 'What would you like to do?',
-    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an emploeye role']
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
 }
-
 ];
 
 
@@ -23,15 +24,40 @@ const questions = [
 function init() {
     
     inquirer.prompt(questions)
-    // .then(function(response) {
-        
-    //     return fs.writeFileSync('README.md', generateMarkdown(response), function(err) {
-    //         if (err) {
-    //             throw err;
-    //         };
-    //     });
-    // })
-}
+        .then(response => {
+            switch(response.view_options) {
+                case 'View all departments': 
+                    viewAllDepartments(); 
+                    break;
+                case 'View all roles':
+                    viewAllRoles();
+                    break;
+                case 'View all employees':
+                    viewAllEmployees();
+                    break;
+                case 'Add a department':
+                    addADepartment();
+                    break;
+                case 'Add a role':
+                    addARole();
+                    break;
+                case 'Add an employee':
+                    addAnEmployee();
+                    break;
+                case 'Update an employee role':
+                    updateEmployeeRole();
+                    break;
+            }
+        })
+};
 
-// Function call to initialize app
-init();
+
+const viewAllDepartments = () => {
+    connection.query('SELECT * FROM departments;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        console.table(res)
+        init()
+    })
+}
