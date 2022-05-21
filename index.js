@@ -176,4 +176,39 @@ const addARole = () => {
 }
 
 
+const addADepartment = () => {
+        inquirer.prompt({
+            type: 'input',
+            name: 'departmentName',
+            message: "What is the department name?"
+        },
+        ).then((response) => {
+            // const departmentSelected = res.find(department => department.department_name === response.roleDepartment)
+            connection.query('INSERT INTO departments SET ?', {
+                department_name: response.departmentName,
+            }, (err) => {
+                if (err) {
+                    throw err
+                }
+            console.log('New department has been added.')
+            init()
+            }) 
+        })
+}
+
+const updateEmployeeRole = () => {
+    connection.query('SELECT * FROM employees;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        inquirer.prompt({
+            type: 'list',
+            name: 'employeesList',
+            message: "Which employee would you like to update?",
+            choices: res.map(employeeChoice => employeeChoice.first_name)
+        })
+    })
+}
+
+
 //the update one - ask 2 questions, may need 2 separate queries. will need to query the emploeye's table, map thru employees to choose one, in .then query the roles table, and map thru job title roles, and then have another .then, and do update query and third .then
