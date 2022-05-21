@@ -72,6 +72,16 @@ const viewAllEmployees = () => {
     })
 }
 
+const viewAllRoles = () => {
+    connection.query('SELECT * FROM roles;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        console.table(res)
+        init()
+    })
+}
+
 //do rest of views here
 
 //add an employee
