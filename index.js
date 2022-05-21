@@ -82,7 +82,6 @@ const viewAllRoles = () => {
     })
 }
 
-//do rest of views here
 
 //add an employee
 const addAnEmployee = () => {
@@ -128,7 +127,7 @@ const addAnEmployee = () => {
                 if (err) {
                     throw err
                 }
-            console.log('new employee has been added')
+            console.log('New employee has been added.')
             init()
             }) 
         })
@@ -136,5 +135,45 @@ const addAnEmployee = () => {
     })
 }
 
-//addrole is similar to addemployees, reference the department table
+const addARole = () => {
+    connection.query('SELECT * FROM departments;', (err, res) => {
+        if (err) {
+            throw err
+        }
+        inquirer.prompt([{
+            type: 'input',
+            name: 'roleName',
+            message: "What is the role name?"
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: "What is the salary for this role?"
+        }, 
+        {
+            type: 'list',
+            name: 'roleDepartment',
+            message: "What department does this role fall under?",
+            choices: res.map(department => department.department_name)
+        },
+        ]).then((response) => {
+            const departmentSelected = res.find(department => department.department_name === response.roleDepartment)
+            connection.query('INSERT INTO roles SET ?', {
+                job_title: response.roleName,
+                role_salary: response.roleSalary,
+                department_id: departmentSelected.id ,
+
+            }, (err) => {
+                if (err) {
+                    throw err
+                }
+            console.log('New role has been added.')
+            init()
+            }) 
+        })
+    
+    })
+}
+
+
 //the update one - ask 2 questions, may need 2 separate queries. will need to query the emploeye's table, map thru employees to choose one, in .then query the roles table, and map thru job title roles, and then have another .then, and do update query and third .then
