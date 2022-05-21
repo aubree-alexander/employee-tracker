@@ -197,7 +197,7 @@ const addADepartment = () => {
 }
 
 const updateEmployeeRole = () => {
-    connection.query('SELECT * FROM employees;', (err, res) => {
+    connection.query(`SELECT * FROM employees;`, (err, res) => {
         if (err) {
             throw err
         }
@@ -206,9 +206,30 @@ const updateEmployeeRole = () => {
             name: 'employeesList',
             message: "Which employee would you like to update?",
             choices: res.map(employeeChoice => employeeChoice.first_name)
+        },
+        ).then((response) => {
+            const chosenEmployee = response.employeesList
+                // .substring(0, response.employeesList.indexOf(' ')))
+            // console.log(chosenEmployee)
+            connection.query(`SELECT * FROM roles;`, (err, res) => {
+                if (err) {
+                    throw err
+                }
+                inquirer.prompt({
+                    type: 'list',
+                    name: 'rolesList',
+                    message: "What is the employee's new role?",
+                    choices: res.map(roleChoice => roleChoice.job_title)
+                },
+                ).then((response) => {
+                    const updatedRole = res.find(roleChoice => roleChoice.job_title === response.rolesList)
+                    connection.promise().query(`UPDATE employees SET roles_id = ${updatedRole.id} WHERE first_name = '${chosenEmployee}'`)
+                    .then(console.log('Employee has been updated.'))
+                    .catch(err => console.log(err))
+                    
+                    init()
+                    })
+                })
+            })
         })
-    })
-}
-
-
-//the update one - ask 2 questions, may need 2 separate queries. will need to query the emploeye's table, map thru employees to choose one, in .then query the roles table, and map thru job title roles, and then have another .then, and do update query and third .then
+    }
