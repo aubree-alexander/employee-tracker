@@ -1,7 +1,5 @@
 USE employee_tracker;
 
---parameters that departments is expecting
---don't need to add primary key id here because auto increment keeps track and assigns id's sequentially. ONLY because we assigned it an auto increment
 INSERT INTO departments (department_name)
 VALUES ('Human Resources'), ('Talent'), ('IT'), ('Sales'), ('Janitorial')
 

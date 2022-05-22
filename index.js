@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const connection = require('./dbconnection.js')
 
-//start connection; if error it'll show the error; then it'll start everything
 connection.connect(function (err) {
     if (err) {
         throw err
@@ -83,7 +82,6 @@ const viewAllRoles = () => {
 }
 
 
-//add an employee
 const addAnEmployee = () => {
     connection.query('SELECT * FROM roles;', (err, res) => {
         if (err) {
@@ -103,8 +101,6 @@ const addAnEmployee = () => {
             type: 'list',
             name: 'roleTitle',
             message: "What is the employee's role?",
-            //the word role below is arbitrary; we named it
-            //role is basically the response.
             choices: res.map(role => role.job_title)
         },
         {
@@ -115,7 +111,6 @@ const addAnEmployee = () => {
         }
         ]).then((response) => {
             const roleSelected = res.find(role => role.job_title === response.roleTitle)
-            //? is placeholder for set
             connection.query('INSERT INTO employees SET ?', {
                 //declare column name and value we want to insert
                 first_name: response.employeeFirstName,
@@ -183,7 +178,6 @@ const addADepartment = () => {
             message: "What is the department name?"
         },
         ).then((response) => {
-            // const departmentSelected = res.find(department => department.department_name === response.roleDepartment)
             connection.query('INSERT INTO departments SET ?', {
                 department_name: response.departmentName,
             }, (err) => {
@@ -209,8 +203,6 @@ const updateEmployeeRole = () => {
         },
         ).then((response) => {
             const chosenEmployee = response.employeesList
-                // .substring(0, response.employeesList.indexOf(' ')))
-            // console.log(chosenEmployee)
             connection.query(`SELECT * FROM roles;`, (err, res) => {
                 if (err) {
                     throw err
