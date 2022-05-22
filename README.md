@@ -11,6 +11,7 @@
 * Functionality: User can download code, invoke the application with 'node index', and be prompted with a list of options - to view a table of employees, departments, or roles, to add a department, role or employee, or to update an existing employee's role. 
 
 ## Walkthrough/Demonstration Video
+https://user-images.githubusercontent.com/99295420/169674407-193b6a53-e3cd-4226-85c2-7a52237e6b19.mp4
 
 
 ## User Story 
